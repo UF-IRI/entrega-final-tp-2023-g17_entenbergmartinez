@@ -11,6 +11,7 @@ SOURCES += \
     libreria.cpp
 
 HEADERS += \
+    archivos.h \
     libreria_global.h \
     libreria.h
 
