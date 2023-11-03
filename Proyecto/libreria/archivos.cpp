@@ -1,12 +1,53 @@
 #include <archivos.h>
 
+eArchivos Largo_Archivos(ifstream &archivo, int& cont){
+
+    string header, line;
+
+    if(!(archivo).is_open())
+    {
+        return eArchivos :: ErrorApertura;
+    }
+
+    getline((archivo), header);
+
+    while((archivo).good())
+    {
+        getline((archivo),line);
+        cont++;
+    }
+    return eArchivos :: ExitoOperacion;
+}
+
 eArchivos leerArchivoClientes(ifstream *archivo, ClientesGYM *Clientes){
-    u_int auxidCliente;
-    string auxNombre, auxApellido, auxEmail, auxTelefono;
-    string auxFechanacimiento;
-    int auxEstado;
-    char coma;
-    int i=0;
+
+    int i = 0;
+
+    ifstream infile("csv_file.csv");
+
+    if (!infile.is_open()) {
+
+        return eArchivos :: ErrorApertura;
+    }
+
+    string header;
+    getline(infile, header);
+
+    while (infile.good()) {
+
+        string line;
+        getline(infile, line);
+        char delimiter = ',';
+
+        string field;
+        istringstream iss(line);
+        while (getline(iss, field, delimiter)) {
+            (Clientes+i)->idCliente= stoul(field);
+        }
+        cout << endl;
+    }
+
+    infile.close();
 
     if(!archivo->is_open())
         return eArchivos::ErrorApertura;

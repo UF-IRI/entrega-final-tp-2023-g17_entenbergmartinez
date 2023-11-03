@@ -1,11 +1,11 @@
 #ifndef ENCABEZADOS_H
 #define ENCABEZADOS_H
 
-#include <time.h>
-#include <string.h>
+#include <ctime>
 #include <string>
 #include <fstream>
-#include <ctime>
+#include <sstream>
+#include <cstdlib>
 #include <iostream>
 
 using namespace std;

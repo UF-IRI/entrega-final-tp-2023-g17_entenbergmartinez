@@ -34,8 +34,10 @@ eClase BuscarIdClase(ClasesGym *Clases, int idClase, int cantClases, ClasesGym c
 eCliente FiltroDeCliente(ClientesGYM* Clientes, int idCliente)
 {
     ClientesGYM cliente;
+    int CantClientes = 0;
 
-    BuscarIdCliente(*Clientes, idCliente, CantClientes, cliente);
+    Largo_Archivos(archivo_clientes, CantClientes);
+    BuscarIdCliente(Clientes, idCliente, CantClientes, cliente);
 
     for(int i = 0; i<30; i++)
     {
@@ -76,8 +78,10 @@ eCliente FiltroDeCliente(ClientesGYM* Clientes, int idCliente)
 eClase FiltroDeClase(ClasesGym *Clases, int idCliente, int idClase, Asistencia *AsistenciaCliente)
 {
     ClasesGym clase;
+    int CantClases = 0;
 
-    BuscarIdClase(*Clases, idClase, cantClases, clase);
+    Largo_Archivos(archivo_clases, CantClases);
+    BuscarIdClase(Clases, idClase, CantClases, clase);
 
 
 }
