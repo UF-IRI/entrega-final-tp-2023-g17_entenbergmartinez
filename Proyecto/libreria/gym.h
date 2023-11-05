@@ -1,7 +1,7 @@
 #ifndef GYM_H
 #define GYM_H
 
-#include <encabezados.h>
+#include "encabezados.h"
 
 //Declaro Errores
 enum Clientes  { ErrEstado = -7, ErrIdClienteinx = -6, ErrNombre = -5, ErrApellido = -4, ErrTelefono = -3, ErrMuyViejo = -2, ErrMuyJoven = -1, ExitoCliente = 1 };
@@ -56,8 +56,9 @@ eClase BuscarIdClase(ClasesGym *Clases, int idClase, int cantClases, ClasesGym c
 int BuscarAsistenicaCliente(ClasesGym *Clases, int idClase);
 
 //Filtrar
-eCliente FiltroDeCliente(ClientesGYM *Clientes, int idCliente);
-eClase FiltroDeClase(ClasesGym *Clases, int idCliente, int idClase, Asistencia *AsistenciaCliente);
+eCliente FiltroDeCliente(ClientesGYM *Clientes, int idCliente, int cantClientes);
+eClase FiltroDeClase(ClasesGym *Clases, int idCliente, int idClase, Asistencia *AsistenciaCliente, int cantClases);
+eDia FiltroFecha();
 eAsistencia FiltroDeAsistencia(Asistencia *AsistenciaCliente, int idCliente);
 eDia FiltroDeDia(time_t fechaInscripcion);
 

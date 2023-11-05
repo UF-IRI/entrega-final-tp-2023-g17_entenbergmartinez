@@ -1,6 +1,6 @@
 #include <gym.h>
 
-eCliente BuscarIdCliente(ClientesGYM *Clientes, u_int idCliente, int CantClientes, ClientesGYM cliente)
+eCliente BuscarIdCliente(ClientesGYM *Clientes, u_int idCliente, int CantClientes, ClientesGYM &cliente)
 {
     ClientesGYM *aux = Clientes, *ultimo = (Clientes) + CantClientes - 1;
     while(true) {
@@ -15,9 +15,9 @@ eCliente BuscarIdCliente(ClientesGYM *Clientes, u_int idCliente, int CantCliente
     return eCliente :: ErrIdClienteinx;
 }
 
-eClase BuscarIdClase(ClasesGym *Clases, int idClase, int cantClases, ClasesGym clase);
+eClase BuscarIdClase(ClasesGym *Clases, u_int idClase, int cantClases, ClasesGym &clase)
 {
-    ClasesGym *aux = Clases, *ultimo = (Clases) + CantClases - 1;
+    ClasesGym *aux = Clases, *ultimo = (Clases) + cantClases - 1;
     while(true) {
         if (aux->idClase == idClase ){
             clase = *aux;
@@ -34,54 +34,93 @@ eClase BuscarIdClase(ClasesGym *Clases, int idClase, int cantClases, ClasesGym c
 eCliente FiltroDeCliente(ClientesGYM* Clientes, int idCliente)
 {
     ClientesGYM cliente;
-    int CantClientes = 0;
+    int CantClientes = 0, error;
 
-    Largo_Archivos(archivo_clientes, CantClientes);
-    BuscarIdCliente(Clientes, idCliente, CantClientes, cliente);
 
-    for(int i = 0; i<30; i++)
-    {
-        if(!((cliente.nombre[i] >= 65 && cliente.nombre[i] <= 90) || (cliente.nombre[i] >= 97 && cliente.nombre[i] <= 127) || (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
-            return eCliente::ErrNombre; // cliente null pone todo en 0, borra todo
+    error = BuscarIdCliente(Clientes, idCliente, CantClientes, cliente);
+    if(error == 1){
+        for(int i = 0; i<30; i++)
+        {
+            if(!((cliente.nombre[i] >= 65 && cliente.nombre[i] <= 90) || (cliente.nombre[i] >= 97 && cliente.nombre[i] <= 127))) //|| (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
+                return eCliente::ErrNombre; // cliente null pone todo en 0, borra todo
+        }
+
+        for(int i = 0; i<30; i++)
+        {
+            if(!((cliente.apellido[i] >= 65 && cliente.apellido[i] <= 90) || (cliente.apellido[i] >= 97 && cliente.apellido[i] <= 127))) //|| (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
+                return eCliente::ErrApellido;
+        }
+
+        for(int i = 0; i<13; i++)
+        {
+            if(!(cliente.telefono[i] >= 48 && cliente.telefono[i] <= 57) || (cliente.telefono[i] == 45))
+                return eCliente::ErrTelefono;
+        }
+
+        if(cliente.estado < 0)
+            return eCliente::ErrEstado;
+
+        int dia, mes, año, edad;
+        char delimiter = '-';
+        string auxdia, auxmes, auxaño;
+        stringstream ss;
+        ss << cliente.fechanacimiento;
+        getline(ss,auxdia,delimiter);
+        dia = stoi(auxdia);
+        getline(ss,auxmes,delimiter);
+        mes = stoi(auxmes);
+        getline(ss,auxaño,delimiter);
+        año = stoi(auxaño);
+
+        time_t rawtime;
+        tm fechanacimiento;
+        tm * timeinfo;
+
+        time(&rawtime);
+        timeinfo = localtime(&rawtime);
+
+        fechanacimiento.tm_mday = dia;
+        fechanacimiento.tm_mon = (mes-1);
+        fechanacimiento.tm_year = (año-1900);
+
+        edad = fechanacimiento.tm_year - timeinfo->tm_year;
+
+        if(fechanacimiento.tm_mon < timeinfo->tm_mon || (fechanacimiento.tm_mon == timeinfo->tm_mon && fechanacimiento.tm_mday < timeinfo->tm_mday))
+            edad--;
+
+        if(edad<18)
+            return eCliente :: ErrMuyJoven;
+        else if(edad>100)
+            return eCliente :: ErrMuyViejo;
+
+        return eCliente ::ExitoCliente;
     }
-
-    for(int i = 0; i<30; i++)
-    {
-        if(!((cliente.apellido[i] >= 65 && cliente.apellido[i] <= 90) || (cliente.apellido[i] >= 97 && cliente.apellido[i] <= 127) || (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
-            return eCliente::ErrApellido;
-    }
-
-    for(int i = 0; i<13; i++)
-    {
-        if(!(cliente.telefono[i] >= 48 && cliente.telefono[i] <= 57) || (cliente.telefono[i] == 45))
-            return eCliente::ErrTelefono;
-    }
-
-    if(cliente.estado < 0)
-        return eCliente::ErrEstado;
-
-
-    //revisar
-    string str = cliente.fechanacimiento;
-    const char *c = str.c_str();
-    time_t ts = 0;
-    struct tm a_date;
-
-    strptime(c, "%d-%m-%Y", &a_date);
-    ts = mktime(&a_date);
-
-
-
+    else
+        return eCliente :: ErrIdClienteinx;
 }
 
+eDia FiltroFecha() {
 
-eClase FiltroDeClase(ClasesGym *Clases, int idCliente, int idClase, Asistencia *AsistenciaCliente)
+    time_t rawtime;
+    tm * timeinfo;
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    if(timeinfo->tm_wday == 6)
+        return eDia :: ErrDia;
+
+    return eDia :: ExitoDia;
+}
+
+eClase FiltroDeClase(ClasesGym *Clases, int idCliente, int idClase, Asistencia *AsistenciaCliente, int cantClases)
 {
     ClasesGym clase;
-    int CantClases = 0;
+    int error;
 
-    Largo_Archivos(archivo_clases, CantClases);
-    BuscarIdClase(Clases, idClase, CantClases, clase);
+    error = BuscarIdClase(Clases, idClase, cantClases, clase);
+
+
 
 
 }

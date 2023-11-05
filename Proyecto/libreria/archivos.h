@@ -8,9 +8,8 @@ enum Archivos {ErrorApertura = -2, ErrorEscritura = -1, ExitoOperacion = 1};
 typedef enum Archivos  eArchivos;
 
 //Declaro Funciones
-eArchivos Largo_Archivos(ifstream &archivo, int& cont);
-void LeerArchivoClases(ifstream &archivo, ClasesGym *Clases);
-void LeerArchivoClientes(ifstream &archivo, ClientesGYM *Clientes);
+eArchivos leerArchivoClientes(string archivo, ClientesGYM *&Clientes, int &cantClientes);
+eArchivos leerArchivoClases(string archivo, ClasesGym *&Clases, int &cantClases);
 //void LeerArchivoBinario(ifstream &archivo, );
 
 #endif // ARCHIVOS_H
