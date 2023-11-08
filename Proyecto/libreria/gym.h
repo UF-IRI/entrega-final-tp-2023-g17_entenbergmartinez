@@ -26,8 +26,8 @@ typedef struct
 
 typedef struct
 {
-    u_int idCliente, cantInscripcion;
-    Inscripcion* CursosInsciptos;
+    u_int idCliente, cantInscriptos;
+    Inscripcion* CursosInscriptos;
 
 } Asistencia;
 
@@ -60,7 +60,7 @@ eClase BuscarIdClaseEnInscripciones(Asistencia AsistenciaCliente, u_int idClase)
 
 //Filtrar
 eCliente FiltroDeCliente(ClientesGYM *Clientes, u_int idCliente, u_int cantClientes);
-eClase FiltroDeClase(ClasesGym *Clases, u_int idCliente, u_int idClase, Asistencia *&AsistenciaClientes, u_int cantClases);
+eClase FiltroDeClase(ClasesGym *Clases, u_int idCliente, u_int idClase, Asistencia *&AsistenciaClientes, u_int cantclases, u_int &CantAsistencias);
 eDia FiltroFecha();
 
 //resize

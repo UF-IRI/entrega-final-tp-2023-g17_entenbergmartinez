@@ -28,9 +28,9 @@ Inscripcion* resizeInscripcion(Asistencia* AsistenciaClientes, u_int cantinscrip
     if(aux != nullptr) {
 
         for(u_int i = 0; i < longitud; i++)
-            aux[i] = AsistenciaClientes->CursosInsciptos[i];
+            aux[i] = AsistenciaClientes->CursosInscriptos[i];
 
-        delete[] AsistenciaClientes->CursosInsciptos;
+        delete[] AsistenciaClientes->CursosInscriptos;
         eAsist2 = ExitoAsistencias;
         return aux;
     }
@@ -93,9 +93,9 @@ eAsistencia BuscarAsistenicaCliente(u_int idClase, u_int idCliente,  Asistencia 
 
         if(eAsist == ExitoAsistencias){
             AsistenciaClientes[CantAsistencias].idCliente = idCliente;
-            AsistenciaClientes[CantAsistencias].cantInscripcion = 1;
-            AsistenciaClientes[CantAsistencias].CursosInsciptos->idClase = idClase;
-            AsistenciaClientes[CantAsistencias].CursosInsciptos->fechaInscripcion = time(0);
+            AsistenciaClientes[CantAsistencias].cantInscriptos = 1;
+            AsistenciaClientes[CantAsistencias].CursosInscriptos->idClase = idClase;
+            AsistenciaClientes[CantAsistencias].CursosInscriptos->fechaInscripcion = time(0);
             AsistenciaCliente = AsistenciaClientes[CantAsistencias];
             CantAsistencias++;
             return eAsistencia :: ExitoCrearAsistencias;
@@ -119,9 +119,9 @@ eAsistencia BuscarAsistenicaCliente(u_int idClase, u_int idCliente,  Asistencia 
 
                 if(eAsist == ExitoAsistencias){
                     AsistenciaClientes[CantAsistencias].idCliente = idCliente;
-                    AsistenciaClientes[CantAsistencias].cantInscripcion = 1;
-                    AsistenciaClientes[CantAsistencias].CursosInsciptos->idClase = idClase;
-                    AsistenciaClientes[CantAsistencias].CursosInsciptos->fechaInscripcion = time(0);
+                    AsistenciaClientes[CantAsistencias].cantInscriptos = 1;
+                    AsistenciaClientes[CantAsistencias].CursosInscriptos->idClase = idClase;
+                    AsistenciaClientes[CantAsistencias].CursosInscriptos->fechaInscripcion = time(0);
                     AsistenciaCliente = AsistenciaClientes[CantAsistencias];
                     CantAsistencias++;
                     return eAsistencia :: ExitoCrearAsistencias;
@@ -146,10 +146,10 @@ eAsistencia BuscarAsistenicaCliente(u_int idClase, u_int idCliente,  Asistencia 
     while(true) {
 
         if (aux->idCliente == idCliente){
-            aux->CursosInsciptos = resizeInscripcion(aux, aux->cantInscripcion, aux->cantInscripcion+1, eAsist2);
+            aux->CursosInscriptos = resizeInscripcion(aux, aux->cantInscriptos, aux->cantInscriptos+1, eAsist2);
             if(eAsist2 == eAsistencia :: ExitoAsistencias){
-                aux->CursosInsciptos[(aux->cantInscripcion)-1].idClase = idClase;
-                aux->CursosInsciptos[(aux->cantInscripcion)-1].fechaInscripcion = time(0);
+                aux->CursosInscriptos[(aux->cantInscriptos)-1].idClase = idClase;
+                aux->CursosInscriptos[(aux->cantInscriptos)-1].fechaInscripcion = time(0);
                 return eAsistencia :: ExitoAsistencias;
             }
             else
@@ -165,10 +165,10 @@ eClase BuscarIdClaseEnInscripciones(Asistencia AsistenciaCliente, u_int idClase)
     u_int cont = 0;
 
     while(true) {
-        if (AsistenciaCliente.CursosInsciptos->idClase == idClase ){
+        if (AsistenciaCliente.CursosInscriptos->idClase == idClase ){
             return eClase :: ErrClaseRepetida;
         }
-        if ( AsistenciaCliente.cantInscripcion == cont)
+        if ( AsistenciaCliente.cantInscriptos == cont)
             break;
         cont++;
     }
@@ -180,16 +180,16 @@ eClase CompararClaseInscripciones(ClasesGym clase, Asistencia AsistenciaCliente,
     u_int i = 0;
     ClasesGym clase2;
 
-    while(i<AsistenciaCliente.cantInscripcion) {
-        if (AsistenciaCliente.CursosInsciptos[i].idClase == clase.idClase){
+    while(i<AsistenciaCliente.cantInscriptos) {
+        if (AsistenciaCliente.CursosInscriptos[i].idClase == clase.idClase){
             return eClase :: ErrClaseRepetida;
         }
         i++;
     }
 
-    while(i<AsistenciaCliente.cantInscripcion) {
-        BuscarIdClase(Clases, AsistenciaCliente.CursosInsciptos[i].idClase, cantclases, clase2);
-        if((clase.horario-clase2.horario)<1 && (clase.horario-clase2.horario)>-1)
+    while(i<AsistenciaCliente.cantInscriptos) {
+        BuscarIdClase(Clases, AsistenciaCliente.CursosInscriptos[i].idClase, cantclases, clase2);
+        if(((clase.horario-clase2.horario)<1 && (clase.horario-clase2.horario)>-1) || ((clase.nombre == "Musculacion" && clase2.nombre == "Musculacion") && ((clase.horario-clase2.horario) < 0.7 && (clase.horario-clase2.horario) > -0.7)))
             return eClase :: ErrSuperposicionDeHorarios;
         i++;
     }
@@ -197,14 +197,13 @@ eClase CompararClaseInscripciones(ClasesGym clase, Asistencia AsistenciaCliente,
     return eClase :: ExitoClase;
 }
 
-
-eCliente FiltroDeCliente(ClientesGYM* Clientes, u_int idCliente)
+eCliente FiltroDeCliente(ClientesGYM *Clientes, u_int idCliente, u_int cantClientes)
 {
     ClientesGYM cliente;
-    int CantClientes = 0, error;
+    int error;
 
 
-    error = BuscarIdCliente(Clientes, idCliente, CantClientes, cliente);
+    error = BuscarIdCliente(Clientes, idCliente, cantClientes, cliente);
     if(error == 1){
         for(int i = 0; i<30; i++)
         {

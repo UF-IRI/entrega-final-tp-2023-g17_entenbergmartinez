@@ -1,34 +1,32 @@
 #include <archivos.h>
 
 //agregar longitud por derecha
-eArchivos leerArchivoClientes(string archivo, ClientesGYM *&Clientes, int &cantClientes){
+eArchivos leerArchivoClientes(ifstream &infileClientes, ClientesGYM *&Clientes, u_int &cantClientes){
 
     int i = 0;
 
-    ifstream infile(archivo);
-
-    if (!infile.is_open()) {
+    if (!infileClientes.is_open()) {
 
         return eArchivos :: ErrorApertura;
     }
 
     string header;
-    getline(infile, header);
+    getline(infileClientes, header);
 
     string line;
     char delimiter = ',';
 
-    while(getline(infile, line))
+    while(getline(infileClientes, line))
         cantClientes++;
 
-    infile.seekg(ios::beg);
+    infileClientes.seekg(ios::beg);
 
     Clientes = new ClientesGYM[cantClientes];
 
-    getline(infile, header);
+    getline(infileClientes, header);
     string auxidCliente, auxnombre, auxapellido, auxemail, auxtelefono, auxfechanacimiento, auxestado;
     stringstream ss;
-    while(getline(infile, line)) {
+    while(getline(infileClientes, line)) {
         ss<<line;
         getline(ss,auxidCliente,delimiter);
         (Clientes[i]).idCliente = stoi(auxidCliente);
@@ -54,38 +52,35 @@ eArchivos leerArchivoClientes(string archivo, ClientesGYM *&Clientes, int &cantC
         i++;
     }
 
-    infile.close();
     return eArchivos :: ExitoOperacion;
 }
 
-eArchivos leerArchivoClases(string archivo, ClasesGym *&Clases, int &cantClases){
+eArchivos leerArchivoClases(ifstream &infileClases, ClasesGym *&Clases, u_int &cantClases){
 
     int i = 0;
 
-    ifstream infile(archivo);
-
-    if (!infile.is_open()) {
+    if (!infileClases.is_open()) {
 
         return eArchivos :: ErrorApertura;
     }
 
     string header;
-    getline(infile, header);
+    getline(infileClases, header);
 
     string line;
     char delimiter = ',';
 
-    while(getline(infile, line))
+    while(getline(infileClases, line))
         cantClases++;
 
-    infile.seekg(ios::beg);
+    infileClases.seekg(ios::beg);
 
     Clases = new ClasesGym[cantClases];
 
-    getline(infile, header);
+    getline(infileClases, header);
     string auxidClase, auxnombre, auxhorario;
     stringstream ss;
-    while(getline(infile, line)) {
+    while(getline(infileClases, line)) {
         ss<<line;
         getline(ss,auxidClase,delimiter);
         (Clases[i]).idClase = stoi(auxidClase);
@@ -114,7 +109,45 @@ eArchivos leerArchivoClases(string archivo, ClasesGym *&Clases, int &cantClases)
         i++;
     }
 
-    infile.close();
-
     return eArchivos::ExitoOperacion;
+}
+
+eArchivos LeerArchivoBinario(ifstream &archivobinlee, Asistencia *&Asistencias, u_int &cantAsist){
+
+    cantAsist = sizeof(archivobinlee)/sizeof(Asistencia);
+
+    Asistencias = new Asistencia[cantAsist];
+
+    if (archivobinlee.is_open()) {
+        for (u_int i=0; i<cantAsist; i++) {
+            archivobinlee.read((char*)&Asistencias[i].idCliente, sizeof(u_int));
+            archivobinlee.read((char*)&Asistencias[i].cantInscriptos, sizeof(u_int));
+            for(u_int j = 0; j < Asistencias[i].cantInscriptos; j++) {
+                archivobinlee.read((char*)&Asistencias[i].CursosInscriptos[j], sizeof(Inscripcion));
+            }
+        }
+
+        return eArchivos :: ExitoOperacion;
+
+    }
+
+    return eArchivos :: ErrorApertura;
+}
+
+eArchivos EscribirArchivoBinario(ofstream &archivobin, Asistencia *&AsistenciaClientes, u_int &cantAsistencias){
+
+    if (archivobin.is_open()) {
+        for (u_int i=0; i<cantAsistencias; i++) {
+            archivobin.write((char*)&AsistenciaClientes[i].idCliente, sizeof(u_int));
+            archivobin.write((char*)&AsistenciaClientes[i].cantInscriptos, sizeof(u_int));
+            for(u_int j = 0; j < AsistenciaClientes[i].cantInscriptos; j++) {
+                archivobin.write((char*)&AsistenciaClientes[i].CursosInscriptos[j], sizeof(Inscripcion));
+            }
+        }
+
+        return eArchivos :: ExitoOperacion;
+
+    }
+
+    return eArchivos :: ErrorApertura;
 }
