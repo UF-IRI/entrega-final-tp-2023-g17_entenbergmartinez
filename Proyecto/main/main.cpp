@@ -9,7 +9,7 @@ int main() {
     srand(static_cast<unsigned int>(time(nullptr)));
     //Asistencia *Asistencias;
     //u_int cantAsist;
-    u_int cantclases = 0, cantClientes = 0, reservas = 5, cantAsistencias = 0;
+    u_int cantclases = 0, cantClientes = 0, reservas = 1, cantAsistencias = 0;
     ClasesGym *Clases;
     ClientesGYM *Clientes;
     Asistencia *AsistenciaClientes;
@@ -23,11 +23,9 @@ int main() {
     fecha_hora->tm_min = 0;
     fecha_hora->tm_sec = 0;
 
-    char buffer[20];  // Suficiente para almacenar la fecha y hora formateada
-    // Utiliza strftime para dar formato a la fecha y hora en el búfer
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", fecha_hora);
-    // Convierte el búfer en una cadena de C++
-    string aux(buffer);
+    string aux;
+    time_t timestamp = mktime(fecha_hora);
+    aux = to_string(timestamp);
 
     /*ifstream archivobinlee("../asistencias_1697673600000.dat", ios::binary);
     LeerArchivoBinario(archivobinlee, Asistencias, cantAsist);
