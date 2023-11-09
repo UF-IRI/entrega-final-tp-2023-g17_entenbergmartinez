@@ -209,19 +209,19 @@ eCliente FiltroDeCliente(ClientesGYM *Clientes, u_int idCliente, u_int cantClien
 
     error = BuscarIdCliente(Clientes, idCliente, cantClientes, cliente);
     if(error == 1){
-        for(int i = 0; i<cliente.nombre.length(); i++)
+        for(unsigned long long i = 0; i<cliente.nombre.length(); i++)
         {
-            if(!(((cliente.nombre[i] >= 65 && cliente.nombre[i] <= 90) || (cliente.nombre[i] >= 97 && cliente.nombre[i] <= 127)) || (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
+            if(!(((cliente.nombre[i] >= 65 && cliente.nombre[i] <= 90) || (cliente.nombre[i] >= 97 && cliente.nombre[i] <= 127)))) //|| (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
                 return eCliente::ErrNombre; // cliente null pone todo en 0, borra todo
         }
 
-        for(int i = 0; i<cliente.apellido.length(); i++)
+        for(unsigned long long i = 0; i<cliente.apellido.length(); i++)
         {
-            if(!(((cliente.apellido[i] >= 65 && cliente.apellido[i] <= 90) || (cliente.apellido[i] >= 97 && cliente.apellido[i] <= 127)) || (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
+            if(!(((cliente.apellido[i] >= 65 && cliente.apellido[i] <= 90) || (cliente.apellido[i] >= 97 && cliente.apellido[i] <= 127)))) //|| (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
                 return eCliente::ErrApellido;
         }
 
-        for(int i = 0; i<cliente.telefono.length(); i++)
+        for(unsigned long long i = 0; i<cliente.telefono.length(); i++)
         {
             if(!((cliente.telefono[i] >= 48 && cliente.telefono[i] <= 57) || (cliente.telefono[i] == 45)))
                 return eCliente::ErrTelefono;
