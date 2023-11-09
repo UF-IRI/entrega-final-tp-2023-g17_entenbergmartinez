@@ -19,14 +19,16 @@ eArchivos leerArchivoClientes(ifstream &infileClientes, ClientesGYM *&Clientes, 
     while(getline(infileClientes, line))
         cantClientes++;
 
-    infileClientes.seekg(ios::beg);
+    infileClientes.clear();
+    infileClientes.seekg(0, std::ios::beg);
 
     Clientes = new ClientesGYM[cantClientes];
 
     getline(infileClientes, header);
     string auxidCliente, auxnombre, auxapellido, auxemail, auxtelefono, auxfechanacimiento, auxestado;
     stringstream ss;
-    while(getline(infileClientes, line)) {
+    while(!infileClientes.eof() && getline(infileClientes, line)) {
+        ss.clear();
         ss<<line;
         getline(ss,auxidCliente,delimiter);
         (Clientes[i]).idCliente = stoi(auxidCliente);
@@ -73,14 +75,16 @@ eArchivos leerArchivoClases(ifstream &infileClases, ClasesGym *&Clases, u_int &c
     while(getline(infileClases, line))
         cantClases++;
 
-    infileClases.seekg(ios::beg);
+    infileClases.clear();
+    infileClases.seekg(0, std::ios::beg);
 
     Clases = new ClasesGym[cantClases];
 
     getline(infileClases, header);
     string auxidClase, auxnombre, auxhorario;
     stringstream ss;
-    while(getline(infileClases, line)) {
+    while(!infileClases.eof() && getline(infileClases, line)) {
+        ss.clear();
         ss<<line;
         getline(ss,auxidClase,delimiter);
         (Clases[i]).idClase = stoi(auxidClase);

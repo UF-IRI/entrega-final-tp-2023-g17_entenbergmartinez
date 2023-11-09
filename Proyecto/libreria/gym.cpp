@@ -10,7 +10,7 @@ Asistencia* resizeClientes(Asistencia *AsistenciaClientes, u_int CantAsistencias
         for(u_int i = 0; i < longitud; i++)
             aux[i] = AsistenciaClientes[i];
 
-        delete[] AsistenciaClientes;
+
         eAsist = ExitoAsistencias;
         return aux;
     }
@@ -30,7 +30,7 @@ Inscripcion* resizeInscripcion(Asistencia* AsistenciaClientes, u_int cantinscrip
         for(u_int i = 0; i < longitud; i++)
             aux[i] = AsistenciaClientes->CursosInscriptos[i];
 
-        delete[] AsistenciaClientes->CursosInscriptos;
+
         eAsist2 = ExitoAsistencias;
         return aux;
     }
@@ -87,13 +87,15 @@ eClase BuscarIdClase(ClasesGym *Clases, u_int idClase, u_int cantClases)
 eAsistencia BuscarAsistenicaCliente(u_int idClase, u_int idCliente,  Asistencia *&AsistenciaClientes, Asistencia &AsistenciaCliente, u_int &CantAsistencias)
 {
     eAsistencia eAsist;
+    eAsistencia eAsist2;
     if(CantAsistencias == 0){
-
         AsistenciaClientes = resizeClientes(AsistenciaClientes, CantAsistencias, CantAsistencias+1, eAsist);
 
         if(eAsist == ExitoAsistencias){
             AsistenciaClientes[CantAsistencias].idCliente = idCliente;
             AsistenciaClientes[CantAsistencias].cantInscriptos = 1;
+            Asistencia *aux = AsistenciaClientes;
+            AsistenciaClientes[CantAsistencias].CursosInscriptos = resizeInscripcion(aux, 0, 1, eAsist2);
             AsistenciaClientes[CantAsistencias].CursosInscriptos->idClase = idClase;
             AsistenciaClientes[CantAsistencias].CursosInscriptos->fechaInscripcion = time(0);
             AsistenciaCliente = AsistenciaClientes[CantAsistencias];
@@ -120,6 +122,8 @@ eAsistencia BuscarAsistenicaCliente(u_int idClase, u_int idCliente,  Asistencia 
                 if(eAsist == ExitoAsistencias){
                     AsistenciaClientes[CantAsistencias].idCliente = idCliente;
                     AsistenciaClientes[CantAsistencias].cantInscriptos = 1;
+                    Asistencia *aux = AsistenciaClientes;
+                    AsistenciaClientes[CantAsistencias].CursosInscriptos = resizeInscripcion(aux, 0, 1, eAsist2);
                     AsistenciaClientes[CantAsistencias].CursosInscriptos->idClase = idClase;
                     AsistenciaClientes[CantAsistencias].CursosInscriptos->fechaInscripcion = time(0);
                     AsistenciaCliente = AsistenciaClientes[CantAsistencias];
@@ -205,28 +209,28 @@ eCliente FiltroDeCliente(ClientesGYM *Clientes, u_int idCliente, u_int cantClien
 
     error = BuscarIdCliente(Clientes, idCliente, cantClientes, cliente);
     if(error == 1){
-        for(int i = 0; i<30; i++)
+        for(int i = 0; i<cliente.nombre.length(); i++)
         {
-            if(!((cliente.nombre[i] >= 65 && cliente.nombre[i] <= 90) || (cliente.nombre[i] >= 97 && cliente.nombre[i] <= 127))) //|| (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
+            if(!(((cliente.nombre[i] >= 65 && cliente.nombre[i] <= 90) || (cliente.nombre[i] >= 97 && cliente.nombre[i] <= 127)) || (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
                 return eCliente::ErrNombre; // cliente null pone todo en 0, borra todo
         }
 
-        for(int i = 0; i<30; i++)
+        for(int i = 0; i<cliente.apellido.length(); i++)
         {
-            if(!((cliente.apellido[i] >= 65 && cliente.apellido[i] <= 90) || (cliente.apellido[i] >= 97 && cliente.apellido[i] <= 127))) //|| (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
+            if(!(((cliente.apellido[i] >= 65 && cliente.apellido[i] <= 90) || (cliente.apellido[i] >= 97 && cliente.apellido[i] <= 127)) || (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
                 return eCliente::ErrApellido;
         }
 
-        for(int i = 0; i<13; i++)
+        for(int i = 0; i<cliente.telefono.length(); i++)
         {
-            if(!(cliente.telefono[i] >= 48 && cliente.telefono[i] <= 57) || (cliente.telefono[i] == 45))
+            if(!((cliente.telefono[i] >= 48 && cliente.telefono[i] <= 57) || (cliente.telefono[i] == 45)))
                 return eCliente::ErrTelefono;
         }
 
         if(cliente.estado < 0)
             return eCliente::ErrEstado;
 
-        int dia, mes, año, edad;
+        int dia, mes, año, edad = 0;
         char delimiter = '-';
         string auxdia, auxmes, auxaño;
         stringstream ss;
@@ -249,7 +253,7 @@ eCliente FiltroDeCliente(ClientesGYM *Clientes, u_int idCliente, u_int cantClien
         fechanacimiento.tm_mon = (mes-1);
         fechanacimiento.tm_year = (año-1900);
 
-        edad = fechanacimiento.tm_year - timeinfo->tm_year;
+        edad = timeinfo->tm_year - fechanacimiento.tm_year;
 
         if(fechanacimiento.tm_mon < timeinfo->tm_mon || (fechanacimiento.tm_mon == timeinfo->tm_mon && fechanacimiento.tm_mday < timeinfo->tm_mday))
             edad--;
@@ -332,4 +336,5 @@ eClase FiltroDeClase(ClasesGym *Clases, u_int idCliente, u_int idClase, Asistenc
     else
         return error1;
 }
+
 
