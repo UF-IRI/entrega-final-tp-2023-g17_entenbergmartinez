@@ -70,7 +70,9 @@ Inscripcion* resizeInscripcion(Asistencia *AsistenciaClientes, u_int cantinscrip
 //comparar
 eClase CompararClaseInscripciones(ClasesGym clase, Asistencia AsistenciaCliente, ClasesGym *Clases, u_int cantclases);
 
-//Imprimir
-
-
+//Controlar archivo binario
+void ordenarclasesinscriptas(Asistencia* asistencias, int cantAsistencias);
+void eliminarclaserepetida(Asistencia* asistencias, int cantAsistencias);
+void ordenarlasclaseseliminadasalfinal(Asistencia* asistencias, int cantAsistencias);
+eClase CompararClaseInscripciones(Asistencia* asistencias, ClasesGym *Clases, u_int cantclases);
 #endif // GYM_H

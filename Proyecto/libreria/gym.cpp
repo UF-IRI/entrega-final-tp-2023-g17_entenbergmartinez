@@ -337,4 +337,116 @@ eClase FiltroDeClase(ClasesGym *Clases, u_int idCliente, u_int idClase, Asistenc
         return error1;
 }
 
+//comprobar binario
+void ordenarclasesinscriptas(Asistencia* asistencias, int cantAsistencias){
+
+    Asistencia *auxasistencias = asistencias, *ultimo = asistencias + cantAsistencias - 1;
+    Inscripcion aux;
+    while(true){
+        for(u_int i=0; i < auxasistencias->cantInscriptos-1; i++){
+            int Contcambios=0;
+            for(u_int j=0; j < auxasistencias->cantInscriptos-1; j++){
+
+                if(auxasistencias->CursosInscriptos[j].fechaInscripcion > auxasistencias->CursosInscriptos[j+1].fechaInscripcion ){
+
+                    aux = auxasistencias->CursosInscriptos[j];
+                    auxasistencias->CursosInscriptos[j] = auxasistencias->CursosInscriptos[j+1];
+                    auxasistencias->CursosInscriptos[j+1] = aux;
+                    Contcambios++;
+                }
+            }
+            if(Contcambios==0)
+                break;
+        }
+        if (auxasistencias == ultimo)
+            break;
+        auxasistencias++;
+    }
+
+
+    return;
+}
+void eliminarclaserepetida(Asistencia* asistencias, int cantAsistencias){
+
+
+
+    Asistencia *auxasistencias = asistencias, *ultimo = asistencias + cantAsistencias - 1;
+    while(true){
+        for(u_int i=0; i < auxasistencias->cantInscriptos-1; i++){
+            for(u_int j=i; j < auxasistencias->cantInscriptos; j++){
+
+                if(auxasistencias->CursosInscriptos[i].idClase == auxasistencias->CursosInscriptos[j].idClase && auxasistencias->CursosInscriptos[i].idClase != 0 ){
+                    auxasistencias->CursosInscriptos[j].idClase = 0;
+                    auxasistencias->CursosInscriptos[j].fechaInscripcion = 0;
+                    auxasistencias->cantInscriptos--;
+                }
+
+            }
+
+        }
+        if (auxasistencias == ultimo)
+            break;
+        auxasistencias++;
+
+    }
+
+    return;
+}
+void ordenarlasclaseseliminadasalfinal(Asistencia* asistencias, int cantAsistencias){
+
+    Asistencia *auxasistencias = asistencias, *ultimo = asistencias + cantAsistencias - 1;
+    Inscripcion aux;
+    eAsistencia eAsist2;
+    while(true){
+        for(u_int i=0; i < auxasistencias->cantInscriptos-1; i++){
+            int Contcambios=0;
+            for(u_int j=0; j < auxasistencias->cantInscriptos-1; j++){
+
+                if(auxasistencias->CursosInscriptos[j].idClase < auxasistencias->CursosInscriptos[j+1].idClase ){
+
+                    aux = auxasistencias->CursosInscriptos[j];
+                    auxasistencias->CursosInscriptos[j] = auxasistencias->CursosInscriptos[j+1];
+                    auxasistencias->CursosInscriptos[j+1] = aux;
+                    Contcambios++;
+                }
+            }
+            if(Contcambios==0)
+                break;
+        }
+        auxasistencias->CursosInscriptos = resizeInscripcion(auxasistencias,  auxasistencias->cantInscriptos, auxasistencias->cantInscriptos, eAsist2);
+        if (auxasistencias == ultimo)
+            break;
+        auxasistencias++;
+    }
+
+
+    return;
+
+}
+
+eClase CompararClaseInscripciones(Asistencia* asistencias, ClasesGym *Clases, u_int cantclases, int cantAsistencias){
+    u_int i, j;
+    ClasesGym clase1, clase2;
+    Asistencia *auxasistencias = asistencias, *ultimo = asistencias + cantAsistencias - 1;
+    while(true){
+        for(i=0; i<auxasistencias->cantInscriptos; i++) {
+            for(j=i; j<auxasistencias->cantInscriptos; j++){
+                if(auxasistencias->CursosInscriptos[i].idClase != 0 || auxasistencias->CursosInscriptos[j].idClase != 0){
+                    BuscarIdClase(Clases, auxasistencias->CursosInscriptos[i].idClase, cantclases, clase1);
+                    BuscarIdClase(Clases, auxasistencias->CursosInscriptos[j].idClase, cantclases, clase2);
+                    if(((clase1.horario-clase2.horario)<1 && (clase1.horario-clase2.horario)>-1) || ((clase1.nombre == "Musculacion" && clase2.nombre == "Musculacion") && ((clase1.horario-clase2.horario) < 0.7 && (clase1.horario-clase2.horario) > -0.7))){
+                        auxasistencias->CursosInscriptos[j].idClase = 0;
+                        auxasistencias->CursosInscriptos[j].fechaInscripcion = 0;
+                        auxasistencias->cantInscriptos--;
+                    }
+                }
+            }
+        }
+        if (auxasistencias == ultimo)
+            break;
+        auxasistencias++;
+    }
+
+    return eClase :: ExitoClase;
+}
 

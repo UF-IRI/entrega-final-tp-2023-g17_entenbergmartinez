@@ -95,20 +95,34 @@ eArchivos leerArchivoClases(ifstream &infileClases, ClasesGym *&Clases, u_int &c
         getline(ss,auxhorario,delimiter);
         (Clases[i]).horario = stof(auxhorario);
 
-        if(stoi(auxidClase)>0 && stoi(auxidClase)<6)
+        if(stoi(auxidClase)>0 && stoi(auxidClase)<6){
             (Clases[i]).cuposMax=45;
-        else if(stoi(auxidClase)>5 && stoi(auxidClase)<12)
+            (Clases[i]).cuposActuales=0;
+        }
+        else if(stoi(auxidClase)>5 && stoi(auxidClase)<12){
             (Clases[i]).cuposMax=25;
-        else if(stoi(auxidClase)>11 && stoi(auxidClase)<18)
+            (Clases[i]).cuposActuales=0;
+        }
+        else if(stoi(auxidClase)>11 && stoi(auxidClase)<18){
             (Clases[i]).cuposMax=15;
-        else if(stoi(auxidClase)>17 && stoi(auxidClase)<24)
+            (Clases[i]).cuposActuales=0;
+        }
+        else if(stoi(auxidClase)>17 && stoi(auxidClase)<24){
             (Clases[i]).cuposMax=40;
-        else if(stoi(auxidClase)>23 && stoi(auxidClase)<30)
+            (Clases[i]).cuposActuales=0;
+        }
+        else if(stoi(auxidClase)>23 && stoi(auxidClase)<30){
             (Clases[i]).cuposMax=50;
-        else if(stoi(auxidClase)>29 && stoi(auxidClase)<34)
+            (Clases[i]).cuposActuales=0;
+        }
+        else if(stoi(auxidClase)>29 && stoi(auxidClase)<34){
             (Clases[i]).cuposMax=30;
-        else if(stoi(auxidClase)>33 && stoi(auxidClase)<61)
+            (Clases[i]).cuposActuales=0;
+        }
+        else if(stoi(auxidClase)>33 && stoi(auxidClase)<61){
             (Clases[i]).cuposMax=30;
+            (Clases[i]).cuposActuales=0;
+        }
 
         i++;
     }
@@ -116,18 +130,20 @@ eArchivos leerArchivoClases(ifstream &infileClases, ClasesGym *&Clases, u_int &c
     return eArchivos::ExitoOperacion;
 }
 
-eArchivos LeerArchivoBinario(ifstream &archivobinlee, Asistencia *&Asistencias, u_int &cantAsist){
+eArchivos LeerArchivoBinario(ifstream &archivobinlee, Asistencia *&asistencias, u_int &cantAsist){
 
     cantAsist = sizeof(archivobinlee)/sizeof(Asistencia);
 
-    Asistencias = new Asistencia[cantAsist];
+    asistencias = new Asistencia[cantAsist];
 
     if (archivobinlee.is_open()) {
         for (u_int i=0; i<cantAsist; i++) {
-            archivobinlee.read((char*)&Asistencias[i].idCliente, sizeof(u_int));
-            archivobinlee.read((char*)&Asistencias[i].cantInscriptos, sizeof(u_int));
-            for(u_int j = 0; j < Asistencias[i].cantInscriptos; j++) {
-                archivobinlee.read((char*)&Asistencias[i].CursosInscriptos[j], sizeof(Inscripcion));
+            archivobinlee.read((char*)&asistencias[i].idCliente, sizeof(u_int));
+            archivobinlee.read((char*)&asistencias[i].cantInscriptos, sizeof(u_int));
+            asistencias[i].CursosInscriptos = new Inscripcion[asistencias[i].cantInscriptos];
+            for(u_int j = 0; j < asistencias[i].cantInscriptos; j++) {
+
+                archivobinlee.read((char*)&asistencias[i].CursosInscriptos[j], sizeof(Inscripcion));
             }
         }
 
