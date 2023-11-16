@@ -130,7 +130,7 @@ eArchivos leerArchivoClases(ifstream &infileClases, ClasesGym *&Clases, u_int &c
     return eArchivos::ExitoOperacion;
 }
 
-eArchivos LeerArchivoBinario(ifstream &archivobinlee, Asistencia *&asistencias, u_int &cantAsist){
+eArchivos LeerArchivoBinario(ifstream &archivobinlee, Asistencia *asistencias){
 
     if (!archivobinlee.is_open()) {
         std::cerr << "Error al abrir el archivo." << std::endl;
@@ -138,42 +138,32 @@ eArchivos LeerArchivoBinario(ifstream &archivobinlee, Asistencia *&asistencias, 
     }
 
 
-    archivobinlee.seekg(0, std::ios::end);
-    std::streampos fileSize = archivobinlee.tellg();
-    archivobinlee.seekg(0, std::ios::beg);
-    cantAsist = static_cast<u_int>(fileSize / sizeof(Asistencia));
-
-
-    asistencias = new Asistencia[cantAsist];
-
-
-    if (!archivobinlee) {
-        std::cerr << "Error al leer desde el archivo." << std::endl;
-        delete[] asistencias;
-        return eArchivos::ErrorApertura;
+    if (!archivobinlee.is_open()){
+        delete [] asistencias;
+        return eArchivos :: ErrorApertura;
     }
 
 
-    for (u_int i = 0; i < cantAsist; i++) {
+    archivobinlee.clear();
+    archivobinlee.seekg(0);
 
-        archivobinlee.read(reinterpret_cast<char*>(&asistencias[i].idCliente), sizeof(u_int));
-        archivobinlee.read(reinterpret_cast<char*>(&asistencias[i].cantInscriptos), sizeof(u_int));
+    Asistencia *aux = asistencias;
 
+    while (!archivobinlee.eof()) {
+        archivobinlee.read((char *)&aux->idCliente, sizeof(u_int));
+        archivobinlee.read((char *)&aux->cantInscriptos, sizeof(u_int));
 
-        asistencias[i].CursosInscriptos = new Inscripcion[asistencias[i].cantInscriptos];
-
-
-        for (u_int j = 0; j < asistencias[i].cantInscriptos; j++) {
-            archivobinlee.read(reinterpret_cast<char*>(&asistencias[i].CursosInscriptos[j]), sizeof(Inscripcion));
+        Inscripcion *registered = new Inscripcion[aux->cantInscriptos];
+        Inscripcion *auxInscriptions = registered;
+        for (u_int i = 0; i < aux->cantInscriptos; i++) {
+            archivobinlee.read((char *)auxInscriptions, sizeof(Inscripcion));
+            auxInscriptions++;
         }
+        aux->CursosInscriptos = registered;
+
+        aux++;
     }
 
-
-    if (!archivobinlee) {
-        std::cerr << "Error al leer desde el archivo." << std::endl;
-        delete[] asistencias;
-        return eArchivos::ErrorApertura;
-    }
 
     return eArchivos::ExitoOperacion;
 }

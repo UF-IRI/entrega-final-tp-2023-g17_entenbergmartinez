@@ -37,22 +37,30 @@ int main() {
     }
 
     ifstream archivobinlee("../asistencias_1697673600000.dat", ios::binary);
-    errBinario = LeerArchivoBinario(archivobinlee, asistencias, cantAsist);
+
+    archivobinlee.seekg(0, std::ios::end);
+    std::streampos fileSize = archivobinlee.tellg();
+    archivobinlee.seekg(0, std::ios::beg);
+    cantAsist = static_cast<u_int>(fileSize / ((sizeof(Asistencia)) + sizeof(Inscripcion)))-1;
+
+
+    asistencias = new Asistencia[cantAsist];
+
+    errBinario = LeerArchivoBinario(archivobinlee, asistencias);
     archivobinlee.close();
     if(errBinario == eArchivos :: ErrorApertura){
         cout<<"no se pudo abrir el archivo de asistencias";
         cout<<endl;
         delete []Clases;
-
         return eArchivos :: ErrorApertura;
     }
 
-    ordenarclasesinscriptas(asistencias, cantAsist);
+    /*ordenarclasesinscriptas(asistencias, cantAsist);
     eliminarclaserepetida(asistencias, cantAsist);
     ordenarlasclaseseliminadasalfinal(asistencias, cantAsist);
-    ordenarclasesinscriptas(asistencias, cantAsist);
+    //ordenarclasesinscriptas(asistencias, cantAsist);
     CompararClaseInscripciones(asistencias, Clases, cantclases, cantAsist);
-    ordenarlasclaseseliminadasalfinal(asistencias, cantAsist);
+    ordenarlasclaseseliminadasalfinal(asistencias, cantAsist);*/
 
     ifstream infileClientes("../iriClientesGYM.csv");
     errArchivocliente = leerArchivoClientes(infileClientes, Clientes, cantClientes);
@@ -139,7 +147,12 @@ int main() {
                 cout<<endl;
                 break;
             }
+
+            cout<<"La reserva del Cliente id: "<<idCliente<<" para la Clase id: "<<idClase<<" fue realizada con exito";
+            cout<<endl;
         }
+
+
         j++;
     }
     ofstream archivobin("../asistencias_" + aux + ".dat", ios :: binary);

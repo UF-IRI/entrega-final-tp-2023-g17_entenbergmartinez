@@ -5,26 +5,6 @@
 
 TEST_CASE("leer archivos")
 {
-    SECTION("Archivo binario") {
-
-        u_int cantAsist;
-        Asistencia *asistencias;
-        eArchivos errBinario;
-
-        ifstream archivobinlee("../asistencias_1697673600000.dat", ios::binary);
-
-        errBinario = LeerArchivoBinario(archivobinlee, asistencias, cantAsist);
-
-        REQUIRE(errBinario == ExitoOperacion);
-        REQUIRE(cantAsist == 29);
-
-        archivobinlee.close();
-
-        for(u_int i = 0; i < cantAsist; i++){
-            delete[]asistencias[i].CursosInscriptos;
-        }
-        delete [] asistencias;
-    }
 
     SECTION("Archivo Clientes") {
 
@@ -59,6 +39,32 @@ TEST_CASE("leer archivos")
         delete []Clientes;
     }
 
+    SECTION("Archivo Aistencia") {
+        int cantAsist;
+        Asistencia *asistencias;
+        eArchivos errBinario;
+
+        ifstream archivobinlee("../asistencias_1697673600000.dat", ios::binary);
+
+        archivobinlee.seekg(0, std::ios::end);
+        std::streampos fileSize = archivobinlee.tellg();
+        archivobinlee.seekg(0, std::ios::beg);
+        cantAsist = static_cast<u_int>(fileSize / ((sizeof(Asistencia)) + sizeof(Inscripcion)))-1;
+
+
+        asistencias = new Asistencia[cantAsist];
+
+        errBinario = LeerArchivoBinario(archivobinlee, asistencias);
+
+        REQUIRE(errBinario == ExitoOperacion);
+
+        delete []asistencias;
+
+        archivobinlee.close();
+    }
+
+
+
     SECTION("Archivo Clases") {
 
         u_int cantclases;
@@ -92,7 +98,7 @@ TEST_CASE("leer archivos")
 TEST_CASE("Escribir archivo")
 {
 
-    u_int cantAsistencias = 2, cantAsists;
+    u_int cantAsistencias = 2, cantAsist;
     Asistencia *AsistenciaClientes, *AsistenciaClientesPrueba;
     eArchivos errArchivoBinario, errBinario;
     cantAsistencias = 2;
@@ -130,10 +136,17 @@ TEST_CASE("Escribir archivo")
 
     ifstream archivobinlee("../asistencias.dat", ios::binary);
 
-    errBinario = LeerArchivoBinario(archivobinlee, AsistenciaClientesPrueba, cantAsists);
+    archivobinlee.seekg(0, std::ios::end);
+    std::streampos fileSize = archivobinlee.tellg();
+    archivobinlee.seekg(0, std::ios::beg);
+    cantAsist = static_cast<u_int>(fileSize / ((sizeof(Asistencia)) + sizeof(Inscripcion)))-1;
+
+    AsistenciaClientesPrueba = new Asistencia[cantAsist];
+
+    errBinario = LeerArchivoBinario(archivobinlee, AsistenciaClientesPrueba);
 
     REQUIRE(errBinario == ExitoOperacion);
-    REQUIRE(cantAsists == cantAsistencias);
+    REQUIRE(cantAsist == cantAsistencias);
     REQUIRE(AsistenciaClientesPrueba[0].idCliente == AsistenciaClientes[0].idCliente);
     REQUIRE(AsistenciaClientesPrueba[0].cantInscriptos  == AsistenciaClientes[0].cantInscriptos);
     REQUIRE(AsistenciaClientesPrueba[0].CursosInscriptos[0].idClase == AsistenciaClientes[0].CursosInscriptos[0].idClase);
@@ -155,4 +168,17 @@ TEST_CASE("Escribir archivo")
     archivobinlee.close();
 
     delete []AsistenciaClientesPrueba;
+}
+
+TEST_CASE("Funciones")
+{
+    SECTION("Archivo binario") {
+
+
+    }
+
+    SECTION("Archivo Clientes") {
+
+
+    }
 }

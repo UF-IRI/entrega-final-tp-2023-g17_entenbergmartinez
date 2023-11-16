@@ -340,7 +340,7 @@ eClase FiltroDeClase(ClasesGym *Clases, u_int idCliente, u_int idClase, Asistenc
 //comprobar binario
 void ordenarclasesinscriptas(Asistencia* asistencias, int cantAsistencias){
 
-    Asistencia *auxasistencias = asistencias, *ultimo = asistencias + cantAsistencias - 1;
+    Asistencia *auxasistencias = asistencias, *ultimo = (asistencias + cantAsistencias - 1);
     Inscripcion aux;
     while(true){
         for(u_int i=0; i < auxasistencias->cantInscriptos-1; i++){
@@ -358,9 +358,10 @@ void ordenarclasesinscriptas(Asistencia* asistencias, int cantAsistencias){
             if(Contcambios==0)
                 break;
         }
+        auxasistencias++;
         if (auxasistencias == ultimo)
             break;
-        auxasistencias++;
+
     }
 
 
