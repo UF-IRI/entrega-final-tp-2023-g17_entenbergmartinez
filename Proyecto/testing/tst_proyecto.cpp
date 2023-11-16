@@ -172,13 +172,92 @@ TEST_CASE("Escribir archivo")
 
 TEST_CASE("Funciones")
 {
-    SECTION("Archivo binario") {
+    eArchivos errArchivoclase, errArchivocliente;
+    ClasesGym *Clases;
+    ClientesGYM *Clientes;
+    u_int cantclases = 0, cantClientes = 0;
+
+    ifstream infileClases("../iriClasesGYM.csv");
+    errArchivoclase = leerArchivoClases(infileClases, Clases, cantclases);
+    infileClases.close();
+    REQUIRE(errArchivoclase == ExitoOperacion);
+    ifstream infileClientes("../iriClientesGYM.csv");
+    errArchivocliente = leerArchivoClientes(infileClientes, Clientes, cantClientes);
+    infileClientes.close();
+    REQUIRE(errArchivocliente == ExitoOperacion);
+    SECTION("BuscarIdCliente") {
+
+        ClientesGYM cliente;
+        u_int idCliente = 23;
+        eCliente err;
+
+       err = BuscarIdCliente(Clientes, idCliente,  cantClientes,  cliente);
+        REQUIRE(err == ExitoCliente);
+        REQUIRE(cliente.nombre == "Ignacio");
+
+    }
+
+    SECTION("Falla BuscarIdCliente") {
+
+        ClientesGYM cliente;
+        u_int idCliente = 2366;
+        eCliente err;
+
+        err = BuscarIdCliente(Clientes, idCliente,  cantClientes,  cliente);
+        REQUIRE(err == ErrIdClienteinx);
+
+    }
+
+    SECTION("BuscarIdClase") {
+
+        ClasesGym clase;
+        u_int idClase = 23;
+        eClase err;
+
+       err = BuscarIdClase(Clases, idClase, cantclases, clase);
+        REQUIRE(err == ExitoClase);
+        REQUIRE(clase.nombre == "Stretching");
+    }
+
+    SECTION("Falla BuscarIdClase") {
+
+        ClasesGym clase;
+        u_int idClase = 76;
+        eClase err;
+
+        err = BuscarIdClase(Clases, idClase, cantclases, clase);
+        REQUIRE(err == ErrIdClaseinx);
+    }
+
+    SECTION("BuscarAsistenicaCliente") {
 
 
     }
 
-    SECTION("Archivo Clientes") {
+    SECTION("BuscarIdClaseEnInscripciones") {
 
 
     }
+
+    SECTION("CompararClaseInscripciones"){
+
+
+    }
+
+    SECTION("FiltroDeCliente"){
+
+
+    }
+
+    SECTION("FiltroFecha"){
+
+        eDia err;
+
+        err = FiltroFecha();
+
+        REQUIRE(err == ExitoDia); //si no es sabado
+    }
+
+
+
 }

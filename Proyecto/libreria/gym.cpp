@@ -212,7 +212,7 @@ eCliente FiltroDeCliente(ClientesGYM *Clientes, u_int idCliente, u_int cantClien
         for(unsigned long long i = 0; i<cliente.nombre.length(); i++)
         {
             if(!(((cliente.nombre[i] >= 65 && cliente.nombre[i] <= 90) || (cliente.nombre[i] >= 97 && cliente.nombre[i] <= 127)))) //|| (cliente.nombre[i] >= 160 && cliente.nombre[i] <= 165) || (cliente.nombre[i] == 130)))
-                return eCliente::ErrNombre; // cliente null pone todo en 0, borra todo
+                return eCliente::ErrNombre;
         }
 
         for(unsigned long long i = 0; i<cliente.apellido.length(); i++)
