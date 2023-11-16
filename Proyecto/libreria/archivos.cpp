@@ -132,27 +132,52 @@ eArchivos leerArchivoClases(ifstream &infileClases, ClasesGym *&Clases, u_int &c
 
 eArchivos LeerArchivoBinario(ifstream &archivobinlee, Asistencia *&asistencias, u_int &cantAsist){
 
-    cantAsist = sizeof(archivobinlee)/sizeof(Asistencia);
+    if (!archivobinlee.is_open()) {
+        std::cerr << "Error al abrir el archivo." << std::endl;
+        return eArchivos::ErrorApertura;
+    }
+
+
+    archivobinlee.seekg(0, std::ios::end);
+    std::streampos fileSize = archivobinlee.tellg();
+    archivobinlee.seekg(0, std::ios::beg);
+    cantAsist = static_cast<u_int>(fileSize / sizeof(Asistencia));
+
 
     asistencias = new Asistencia[cantAsist];
 
-    if (archivobinlee.is_open()) {
-        for (u_int i=0; i<cantAsist; i++) {
-            archivobinlee.read((char*)&asistencias[i].idCliente, sizeof(u_int));
-            archivobinlee.read((char*)&asistencias[i].cantInscriptos, sizeof(u_int));
-            asistencias[i].CursosInscriptos = new Inscripcion[asistencias[i].cantInscriptos];
-            for(u_int j = 0; j < asistencias[i].cantInscriptos; j++) {
 
-                archivobinlee.read((char*)&asistencias[i].CursosInscriptos[j], sizeof(Inscripcion));
-            }
-        }
-
-        return eArchivos :: ExitoOperacion;
-
+    if (!archivobinlee) {
+        std::cerr << "Error al leer desde el archivo." << std::endl;
+        delete[] asistencias;
+        return eArchivos::ErrorApertura;
     }
 
-    return eArchivos :: ErrorApertura;
+
+    for (u_int i = 0; i < cantAsist; i++) {
+
+        archivobinlee.read(reinterpret_cast<char*>(&asistencias[i].idCliente), sizeof(u_int));
+        archivobinlee.read(reinterpret_cast<char*>(&asistencias[i].cantInscriptos), sizeof(u_int));
+
+
+        asistencias[i].CursosInscriptos = new Inscripcion[asistencias[i].cantInscriptos];
+
+
+        for (u_int j = 0; j < asistencias[i].cantInscriptos; j++) {
+            archivobinlee.read(reinterpret_cast<char*>(&asistencias[i].CursosInscriptos[j]), sizeof(Inscripcion));
+        }
+    }
+
+
+    if (!archivobinlee) {
+        std::cerr << "Error al leer desde el archivo." << std::endl;
+        delete[] asistencias;
+        return eArchivos::ErrorApertura;
+    }
+
+    return eArchivos::ExitoOperacion;
 }
+
 
 eArchivos EscribirArchivoBinario(ofstream &archivobin, Asistencia *&AsistenciaClientes, u_int &cantAsistencias){
 

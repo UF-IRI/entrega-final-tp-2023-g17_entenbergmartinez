@@ -27,8 +27,6 @@ int main() {
     time_t timestamp = mktime(fecha_hora);
     aux = to_string(timestamp);
 
-    ifstream infileprueba("iriClasesGYM.csv");
-    infileprueba.close();
     ifstream infileClases("../iriClasesGYM.csv");
     errArchivoclase = leerArchivoClases(infileClases, Clases, cantclases);
     infileClases.close();
@@ -45,7 +43,7 @@ int main() {
         cout<<"no se pudo abrir el archivo de asistencias";
         cout<<endl;
         delete []Clases;
-        delete []asistencias;
+
         return eArchivos :: ErrorApertura;
     }
 
@@ -159,6 +157,7 @@ int main() {
     delete [] Clases;
     delete [] Clientes;
     delete [] asistencias;
+    delete [] AsistenciaClientes;
 
     return 0;
 }
