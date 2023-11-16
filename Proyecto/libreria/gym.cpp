@@ -430,7 +430,7 @@ eClase CompararClaseInscripciones(Asistencia* asistencias, ClasesGym *Clases, u_
     Asistencia *auxasistencias = asistencias, *ultimo = asistencias + cantAsistencias - 1;
     while(true){
         for(i=0; i<auxasistencias->cantInscriptos; i++) {
-            for(j=i; j<auxasistencias->cantInscriptos; j++){
+            for(j=i+1; j<auxasistencias->cantInscriptos; j++){
                 if(auxasistencias->CursosInscriptos[i].idClase != 0 || auxasistencias->CursosInscriptos[j].idClase != 0){
                     BuscarIdClase(Clases, auxasistencias->CursosInscriptos[i].idClase, cantclases, clase1);
                     BuscarIdClase(Clases, auxasistencias->CursosInscriptos[j].idClase, cantclases, clase2);
