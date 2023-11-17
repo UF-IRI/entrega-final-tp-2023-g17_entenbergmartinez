@@ -231,23 +231,220 @@ TEST_CASE("Funciones")
 
     SECTION("BuscarAsistenicaCliente") {
 
+        u_int CantAsistencias = 2;
+        ClasesGym clase;
+        u_int idClase = 23;
+        Asistencia *AsistenciaClientes, AsistenciaCliente;
+        u_int idCliente = 14;
+        eAsistencia err;
+
+        AsistenciaClientes = new Asistencia[CantAsistencias];
+
+
+        AsistenciaClientes[0].idCliente = 203;
+        AsistenciaClientes[0].cantInscriptos = 3;
+        AsistenciaClientes[0].CursosInscriptos = new Inscripcion[AsistenciaClientes[0].cantInscriptos];
+        AsistenciaClientes[0].CursosInscriptos[0].idClase = 12;
+        AsistenciaClientes[0].CursosInscriptos[0].fechaInscripcion = 1700103600;
+        AsistenciaClientes[0].CursosInscriptos[1].idClase = 43;
+        AsistenciaClientes[0].CursosInscriptos[1].fechaInscripcion = 1700203600;
+        AsistenciaClientes[0].CursosInscriptos[2].idClase = 35;
+        AsistenciaClientes[0].CursosInscriptos[2].fechaInscripcion = 1700303600;
+
+        AsistenciaClientes[1].idCliente = 34;
+        AsistenciaClientes[1].cantInscriptos = 3;
+        AsistenciaClientes[1].CursosInscriptos = new Inscripcion[AsistenciaClientes[1].cantInscriptos];
+        AsistenciaClientes[1].CursosInscriptos[0].idClase = 41;
+        AsistenciaClientes[1].CursosInscriptos[0].fechaInscripcion = 1700103600;
+        AsistenciaClientes[1].CursosInscriptos[1].idClase = 53;
+        AsistenciaClientes[1].CursosInscriptos[1].fechaInscripcion = 1700203600;
+        AsistenciaClientes[1].CursosInscriptos[2].idClase = 55;
+        AsistenciaClientes[1].CursosInscriptos[2].fechaInscripcion = 1700303600;
+
+        err = BuscarAsistenicaCliente(idClase, idCliente,  AsistenciaClientes, AsistenciaCliente, CantAsistencias);
+
+        REQUIRE(err == ExitoCrearAsistencias);
+        REQUIRE(AsistenciaClientes[2].CursosInscriptos[0].idClase == 23);
 
     }
 
-    SECTION("BuscarIdClaseEnInscripciones") {
+    SECTION("BuscarAsistenicaCliente con cant = 0") {
 
+        u_int CantAsistencias = 0;
+        ClasesGym clase;
+        u_int idClase = 23;
+        Asistencia *AsistenciaClientes, AsistenciaCliente;
+        u_int idCliente = 14;
+        eAsistencia err;
+
+        err = BuscarAsistenicaCliente(idClase, idCliente,  AsistenciaClientes, AsistenciaCliente, CantAsistencias);
+
+        REQUIRE(err == ExitoCrearAsistencias);
+        REQUIRE(AsistenciaClientes[0].CursosInscriptos[0].idClase == 23);
+        REQUIRE(AsistenciaClientes[0].idCliente == 14);
+    }
+
+    SECTION("BuscarAsistenicaCliente cliente ya tiene Asist") {
+
+        u_int CantAsistencias = 2;
+        ClasesGym clase;
+        u_int idClase = 23;
+        Asistencia *AsistenciaClientes, AsistenciaCliente;
+        u_int idCliente = 14;
+        eAsistencia err;
+
+        AsistenciaClientes = new Asistencia[CantAsistencias];
+
+
+        AsistenciaClientes[0].idCliente = 203;
+        AsistenciaClientes[0].cantInscriptos = 3;
+        AsistenciaClientes[0].CursosInscriptos = new Inscripcion[AsistenciaClientes[0].cantInscriptos];
+        AsistenciaClientes[0].CursosInscriptos[0].idClase = 12;
+        AsistenciaClientes[0].CursosInscriptos[0].fechaInscripcion = 1700103600;
+        AsistenciaClientes[0].CursosInscriptos[1].idClase = 43;
+        AsistenciaClientes[0].CursosInscriptos[1].fechaInscripcion = 1700203600;
+        AsistenciaClientes[0].CursosInscriptos[2].idClase = 35;
+        AsistenciaClientes[0].CursosInscriptos[2].fechaInscripcion = 1700303600;
+
+        AsistenciaClientes[1].idCliente = 14;
+        AsistenciaClientes[1].cantInscriptos = 3;
+        AsistenciaClientes[1].CursosInscriptos = new Inscripcion[AsistenciaClientes[1].cantInscriptos];
+        AsistenciaClientes[1].CursosInscriptos[0].idClase = 41;
+        AsistenciaClientes[1].CursosInscriptos[0].fechaInscripcion = 1700103600;
+        AsistenciaClientes[1].CursosInscriptos[1].idClase = 53;
+        AsistenciaClientes[1].CursosInscriptos[1].fechaInscripcion = 1700203600;
+        AsistenciaClientes[1].CursosInscriptos[2].idClase = 55;
+        AsistenciaClientes[1].CursosInscriptos[2].fechaInscripcion = 1700303600;
+
+        err = BuscarAsistenicaCliente(idClase, idCliente,  AsistenciaClientes, AsistenciaCliente, CantAsistencias);
+
+        REQUIRE(err == ExitoAsistencias);
 
     }
+
+    SECTION("BuscarAsistenicaCliente cliente ya tiene Asist") {
+
+        u_int CantAsistencias = 2;
+        ClasesGym clase;
+        u_int idClase = 23;
+        Asistencia *AsistenciaClientes;
+        u_int idCliente = 14;
+        eAsistencia err;
+
+        AsistenciaClientes = new Asistencia[CantAsistencias];
+
+
+        AsistenciaClientes[0].idCliente = 203;
+        AsistenciaClientes[0].cantInscriptos = 3;
+        AsistenciaClientes[0].CursosInscriptos = new Inscripcion[AsistenciaClientes[0].cantInscriptos];
+        AsistenciaClientes[0].CursosInscriptos[0].idClase = 12;
+        AsistenciaClientes[0].CursosInscriptos[0].fechaInscripcion = 1700103600;
+        AsistenciaClientes[0].CursosInscriptos[1].idClase = 43;
+        AsistenciaClientes[0].CursosInscriptos[1].fechaInscripcion = 1700203600;
+        AsistenciaClientes[0].CursosInscriptos[2].idClase = 35;
+        AsistenciaClientes[0].CursosInscriptos[2].fechaInscripcion = 1700303600;
+
+        AsistenciaClientes[1].idCliente = 14;
+        AsistenciaClientes[1].cantInscriptos = 3;
+        AsistenciaClientes[1].CursosInscriptos = new Inscripcion[AsistenciaClientes[1].cantInscriptos];
+        AsistenciaClientes[1].CursosInscriptos[0].idClase = 41;
+        AsistenciaClientes[1].CursosInscriptos[0].fechaInscripcion = 1700103600;
+        AsistenciaClientes[1].CursosInscriptos[1].idClase = 53;
+        AsistenciaClientes[1].CursosInscriptos[1].fechaInscripcion = 1700203600;
+        AsistenciaClientes[1].CursosInscriptos[2].idClase = 55;
+        AsistenciaClientes[1].CursosInscriptos[2].fechaInscripcion = 1700303600;
+
+        err = BuscarAsistenicaCliente(idClase, idCliente, AsistenciaClientes);
+
+        REQUIRE(err == ExitoAsistencias);
+
+    }
+
 
     SECTION("CompararClaseInscripciones"){
 
+        ClasesGym clase;
+        Asistencia AsistenciaCliente;
+        eClase err;
+
+        clase.idClase = 23;
+        clase.nombre = "Stretching";
+        clase.horario = 19;
+        clase.cuposMax = 40;
+        clase.cuposActuales = 0;
+
+
+        AsistenciaCliente.idCliente = 14;
+        AsistenciaCliente.cantInscriptos = 3;
+        AsistenciaCliente.CursosInscriptos = new Inscripcion[AsistenciaCliente.cantInscriptos];
+        AsistenciaCliente.CursosInscriptos[0].idClase = 41;
+        AsistenciaCliente.CursosInscriptos[0].fechaInscripcion = 1700103600;
+        AsistenciaCliente.CursosInscriptos[1].idClase = 53;
+        AsistenciaCliente.CursosInscriptos[1].fechaInscripcion = 1700203600;
+        AsistenciaCliente.CursosInscriptos[2].idClase = 55;
+        AsistenciaCliente.CursosInscriptos[2].fechaInscripcion = 1700303600;
+
+        err = CompararClaseInscripciones(clase, AsistenciaCliente, Clases, cantclases);
+        REQUIRE(err == ExitoClase);
 
     }
 
-    SECTION("FiltroDeCliente"){
+    SECTION("CompararClaseInscripciones ya estaba reservada esa clase"){
 
+        ClasesGym clase;
+        Asistencia AsistenciaCliente;
+        eClase err;
+
+        clase.idClase = 41;
+        clase.nombre = "Musculacion";
+        clase.horario = 10.30;
+        clase.cuposMax = 30;
+        clase.cuposActuales = 0;
+
+
+        AsistenciaCliente.idCliente = 14;
+        AsistenciaCliente.cantInscriptos = 3;
+        AsistenciaCliente.CursosInscriptos = new Inscripcion[AsistenciaCliente.cantInscriptos];
+        AsistenciaCliente.CursosInscriptos[0].idClase = 41;
+        AsistenciaCliente.CursosInscriptos[0].fechaInscripcion = 1700103600;
+        AsistenciaCliente.CursosInscriptos[1].idClase = 53;
+        AsistenciaCliente.CursosInscriptos[1].fechaInscripcion = 1700203600;
+        AsistenciaCliente.CursosInscriptos[2].idClase = 55;
+        AsistenciaCliente.CursosInscriptos[2].fechaInscripcion = 1700303600;
+
+        err = CompararClaseInscripciones(clase, AsistenciaCliente, Clases, cantclases);
+        REQUIRE(err == ErrClaseRepetida);
 
     }
+
+    SECTION("CompararClaseInscripciones se superponen horarios"){
+
+        ClasesGym clase;
+        Asistencia AsistenciaCliente;
+        eClase err;
+
+        clase.idClase = 14;
+        clase.nombre = "Pilates";
+        clase.horario = 10;
+        clase.cuposMax = 15;
+        clase.cuposActuales = 0;
+
+
+        AsistenciaCliente.idCliente = 14;
+        AsistenciaCliente.cantInscriptos = 3;
+        AsistenciaCliente.CursosInscriptos = new Inscripcion[AsistenciaCliente.cantInscriptos];
+        AsistenciaCliente.CursosInscriptos[0].idClase = 41;
+        AsistenciaCliente.CursosInscriptos[0].fechaInscripcion = 1700203600;
+        AsistenciaCliente.CursosInscriptos[1].idClase = 53;
+        AsistenciaCliente.CursosInscriptos[1].fechaInscripcion = 1700703600;
+        AsistenciaCliente.CursosInscriptos[2].idClase = 55;
+        AsistenciaCliente.CursosInscriptos[2].fechaInscripcion = 1700103600;
+
+        err = CompararClaseInscripciones(clase, AsistenciaCliente, Clases, cantclases);
+        REQUIRE(err == ErrSuperposicionDeHorarios);
+
+    }
+
 
     SECTION("FiltroFecha"){
 
@@ -257,7 +454,6 @@ TEST_CASE("Funciones")
 
         REQUIRE(err == ExitoDia); //si no es sabado
     }
-
 
 
 }

@@ -190,10 +190,10 @@ eClase CompararClaseInscripciones(ClasesGym clase, Asistencia AsistenciaCliente,
         }
         i++;
     }
-
+    i=0;
     while(i<AsistenciaCliente.cantInscriptos) {
         BuscarIdClase(Clases, AsistenciaCliente.CursosInscriptos[i].idClase, cantclases, clase2);
-        if(((clase.horario-clase2.horario)<1 && (clase.horario-clase2.horario)>-1) || ((clase.nombre == "Musculacion" && clase2.nombre == "Musculacion") && ((clase.horario-clase2.horario) < 0.7 && (clase.horario-clase2.horario) > -0.7)))
+        if(((clase.horario - clase2.horario) < 1 && (clase.horario - clase2.horario) > -1) || ((clase.nombre == "Musculacion" && clase2.nombre == "Musculacion") && ((clase.horario-clase2.horario) < 0.7 && (clase.horario-clase2.horario) > -0.7)))
             return eClase :: ErrSuperposicionDeHorarios;
         i++;
     }
@@ -338,32 +338,38 @@ eClase FiltroDeClase(ClasesGym *Clases, u_int idCliente, u_int idClase, Asistenc
 }
 
 //comprobar binario
-void ordenarclasesinscriptas(Asistencia* asistencias, int cantAsistencias){
+void ordenarclasesinscriptas(Asistencia* asistencias, size_t cantAsistencias) {
 
-    Asistencia *auxasistencias = asistencias, *ultimo = (asistencias + cantAsistencias - 1);
+    Asistencia *auxasistencias = asistencias;
+    Asistencia *ultimo = asistencias + cantAsistencias - 1;
     Inscripcion aux;
-    while(true){
-        for(u_int i=0; i < auxasistencias->cantInscriptos-1; i++){
-            int Contcambios=0;
-            for(u_int j=0; j < auxasistencias->cantInscriptos-1; j++){
 
-                if(auxasistencias->CursosInscriptos[j].fechaInscripcion > auxasistencias->CursosInscriptos[j+1].fechaInscripcion ){
+    while (auxasistencias <= ultimo) {
+        if (auxasistencias->cantInscriptos > 0) {
+            for (u_int i = 0; i < auxasistencias->cantInscriptos - 1; i++) {
+                int Contcambios = 0;
 
-                    aux = auxasistencias->CursosInscriptos[j];
-                    auxasistencias->CursosInscriptos[j] = auxasistencias->CursosInscriptos[j+1];
-                    auxasistencias->CursosInscriptos[j+1] = aux;
-                    Contcambios++;
+                for (u_int j = 0; j < auxasistencias->cantInscriptos - 1; j++) {
+                    if (auxasistencias->CursosInscriptos[j].fechaInscripcion >
+                        auxasistencias->CursosInscriptos[j + 1].fechaInscripcion) {
+                        aux = auxasistencias->CursosInscriptos[j];
+                        auxasistencias->CursosInscriptos[j] = auxasistencias->CursosInscriptos[j + 1];
+                        auxasistencias->CursosInscriptos[j + 1] = aux;
+                        Contcambios++;
+                    }
                 }
+
+                if (Contcambios == 0)
+                    break;
             }
-            if(Contcambios==0)
-                break;
         }
+
         auxasistencias++;
-        if (auxasistencias == ultimo)
+
+        // Si has llegado al final del arreglo, salir del bucle
+        if (auxasistencias > ultimo)
             break;
-
     }
-
 
     return;
 }

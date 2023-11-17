@@ -9,7 +9,7 @@ int main() {
     srand(static_cast<unsigned int>(time(nullptr)));
     //Asistencia *Asistencias;
     //u_int cantAsist;
-    u_int cantclases = 0, cantClientes = 0, reservas = 5, cantAsistencias = 0, cantAsist = 0, j = 0;
+    u_int cantclases = 0, cantClientes = 0, reservas = 5, cantAsistencias = 0, cantAsist = 0, cantasist = 154, j = 0;
     ClasesGym *Clases;
     ClientesGYM *Clientes;
     Asistencia *AsistenciaClientes, *asistencias;
@@ -44,7 +44,7 @@ int main() {
     cantAsist = static_cast<u_int>(fileSize / ((sizeof(Asistencia)) + sizeof(Inscripcion)))-1;
 
 
-    asistencias = new Asistencia[cantAsist];
+    asistencias = new Asistencia[cantasist];
 
     errBinario = LeerArchivoBinario(archivobinlee, asistencias);
     archivobinlee.close();
@@ -55,12 +55,12 @@ int main() {
         return eArchivos :: ErrorApertura;
     }
 
-    /*ordenarclasesinscriptas(asistencias, cantAsist);
-    eliminarclaserepetida(asistencias, cantAsist);
-    ordenarlasclaseseliminadasalfinal(asistencias, cantAsist);
-    //ordenarclasesinscriptas(asistencias, cantAsist);
-    CompararClaseInscripciones(asistencias, Clases, cantclases, cantAsist);
-    ordenarlasclaseseliminadasalfinal(asistencias, cantAsist);*/
+    /*ordenarclasesinscriptas(asistencias, cantasist);
+    eliminarclaserepetida(asistencias, cantasist);
+    ordenarlasclaseseliminadasalfinal(asistencias, cantasist);
+    ordenarclasesinscriptas(asistencias, cantasist);
+    CompararClaseInscripciones(asistencias, Clases, cantclases, cantasist);
+    ordenarlasclaseseliminadasalfinal(asistencias, cantasist);*/
 
     ifstream infileClientes("../iriClientesGYM.csv");
     errArchivocliente = leerArchivoClientes(infileClientes, Clientes, cantClientes);
@@ -164,7 +164,7 @@ int main() {
         return eArchivos :: ErrorApertura;
     }
 
-    for(u_int i = 0; i < cantAsist; i++){
+    for(u_int i = 0; i < cantasist; i++){
         delete[]asistencias[i].CursosInscriptos;
     }
     delete [] Clases;
