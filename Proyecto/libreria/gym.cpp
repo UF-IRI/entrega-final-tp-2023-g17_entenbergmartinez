@@ -152,6 +152,7 @@ eAsistencia BuscarAsistenicaCliente(u_int idClase, u_int idCliente,  Asistencia 
         if (aux->idCliente == idCliente){
             aux->CursosInscriptos = resizeInscripcion(aux, aux->cantInscriptos, aux->cantInscriptos+1, eAsist2);
             if(eAsist2 == eAsistencia :: ExitoAsistencias){
+                aux->cantInscriptos++;
                 aux->CursosInscriptos[(aux->cantInscriptos)-1].idClase = idClase;
                 aux->CursosInscriptos[(aux->cantInscriptos)-1].fechaInscripcion = time(0);
                 return eAsistencia :: ExitoAsistencias;
