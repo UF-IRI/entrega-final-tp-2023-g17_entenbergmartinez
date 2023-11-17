@@ -9,7 +9,7 @@ int main() {
     srand(static_cast<unsigned int>(time(nullptr)));
     //Asistencia *Asistencias;
     //u_int cantAsist;
-    u_int cantclases = 0, cantClientes = 0, reservas = 5, cantAsistencias = 0, cantAsist = 0, cantasist = 154, j = 0;
+    u_int cantclases = 0, cantClientes = 0, reservas = 5000, cantAsistencias = 0, cantAsist = 0, cantasist = 154, j = 0;
     ClasesGym *Clases;
     ClientesGYM *Clientes;
     Asistencia *AsistenciaClientes, *asistencias;
